@@ -1,0 +1,17 @@
+{
+    "name": "ElectricDrill.SimpleRPGHealth.Editor",
+    "rootNamespace": "ElectricDrill.SimpleRpgHealth.CstmEditor",
+    "references": [
+        "GUID:288d9b5ff7f4ec447948d4eac975613e",
+        "GUID:46d39bf349b8a94469f824a6ac71ae68"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

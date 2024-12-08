@@ -1,0 +1,22 @@
+{
+  "name": "com.electricdrill.simple-rpg-health",
+  "version": "1.0.0",
+  "displayName": "SimpleRPGHealth",
+  "description": "An extension library for SimpleRPGCore. It adds health manipulation and damage and healing calculation. It also comes with various resources to define damage types, sources, damage reductions, def penetrations, and much more.",
+  "unity": "2022.1",
+  "dependencies": {
+    "com.electricdrill.simple-rpg-core": "1.0.0",
+    "com.unity.ext.nunit": "2.0.5"
+  },
+  "keywords": [
+    "RPG",
+    "statistic",
+    "utility",
+    "health",
+    "component"
+  ],
+  "author": {
+    "name": "Emanuele Cisotto",
+    "email": "ema.cis8@gmail.com"
+  }
+}
