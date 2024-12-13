@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dfcacd2599878c4cb4794e53d034f27, type: 3}
   m_Name: DamageEventsGenerator
   m_EditorClassIdentifier: 
+  rootNamespace: ElectricDrill.SimpleRpgCore.Events
   eventsToGenerate:
   - eventName: TakenDmg
     documentation: 
@@ -30,5 +31,5 @@ MonoBehaviour:
       nativeType: 0
       monoScript: {fileID: 11500000, guid: 39f37772fc10564479c048779944d172, type: 3}
     isGenerated: 0
-  baseSaveLocation: Packages/com.electricdrill.simple-rpg-core/Runtime/ElectricDrill/SimpleRpgCore/Events
+  baseSaveLocation: Packages/com.electricdrill.simple-rpg-health/Runtime/SimpleRpgHealth/Events
   previousSaveLocation: Packages/com.electricdrill.simple-rpg-core/Runtime/ElectricDrill/SimpleRpgCore/Events
