@@ -55,17 +55,21 @@ namespace ElectricDrill.SimpleRpgCore.CstmEditor
             }
 
             // Draw the useClassMaxHp property
+            
             EditorGUILayout.PropertyField(useClassMaxHp);
 
-            // Conditionally draw maxHp based on useClassMaxHp
+            // Conditionally set the maxHp property to read-only based on useClassMaxHp
             if (useClassMaxHp.boolValue)
             {
-                DrawMaxHpProperty(maxHp);
+                maxHp.FindPropertyRelative("isReadOnly").boolValue = true;
             }
             else
             {
-                EditorGUILayout.PropertyField(maxHp);
+                maxHp.FindPropertyRelative("isReadOnly").boolValue = false;
             }
+            
+            // Draw the maxHp property
+            EditorGUILayout.PropertyField(maxHp);
 
             // Draw the hp property
             EditorGUILayout.PropertyField(hp);
@@ -90,7 +94,7 @@ namespace ElectricDrill.SimpleRpgCore.CstmEditor
             serializedObject.ApplyModifiedProperties();
         }
 
-        private void DrawMaxHpProperty(SerializedProperty property)
+        /*private void DrawMaxHpProperty(SerializedProperty property)
         {
             var useConstant = property.FindPropertyRelative("UseConstant");
             var constantValue = property.FindPropertyRelative("ConstantValue");
@@ -122,6 +126,6 @@ namespace ElectricDrill.SimpleRpgCore.CstmEditor
 
             EditorGUI.indentLevel = indent;
             EditorGUILayout.EndHorizontal();
-        }
+        }*/
     }
 }
