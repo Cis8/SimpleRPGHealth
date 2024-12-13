@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace ElectricDrill.SimpleRpgHealth {
-    [CreateAssetMenu(fileName = "New Dmg Source", menuName = "Simple RPG/Dmg Source")]
+    [CreateAssetMenu(fileName = "New Source", menuName = "Simple RPG/Source")]
     public class Source : ScriptableObject
     {
         public override string ToString() {
