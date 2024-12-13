@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace ElectricDrill.SimpleRpgHealth {
-    [CreateAssetMenu(fileName = "PercentualDefReductionFn", menuName = "Simple RPG/Def Reduction Functions/Percentual Def Reduction")]
+    [CreateAssetMenu(fileName = "PercentualDefReductionFn", menuName = "Simple RPG Health/Def Reduction Functions/Percentual Def Reduction")]
     public class PercentualDefReductionFn : DefReductionFn
     {
         public override double ReducedDef(long piercingStatValue, long piercedStatValue) {

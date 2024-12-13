@@ -4,7 +4,7 @@ using UnityEngine.Serialization;
 
 namespace ElectricDrill.SimpleRpgHealth
 {
-    [CreateAssetMenu(fileName = "New Stat", menuName = "Simple RPG/DmgType")]
+    [CreateAssetMenu(fileName = "New Stat", menuName = "Simple RPG Health/DmgType")]
     public class DmgType : ScriptableObject
     {
         [SerializeField] private Stat dmgReducedBy;

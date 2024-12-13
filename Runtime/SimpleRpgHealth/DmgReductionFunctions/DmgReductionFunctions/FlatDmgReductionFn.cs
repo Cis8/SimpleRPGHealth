@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ElectricDrill.SimpleRpgHealth
 {
-    [CreateAssetMenu(fileName = "FlatDmgReductionFn", menuName = "Simple RPG/Dmg Reduction Functions/Flat Dmg Reduction")]
+    [CreateAssetMenu(fileName = "FlatDmgReductionFn", menuName = "Simple RPG Health/Dmg Reduction Functions/Flat Dmg Reduction")]
     public class FlatDmgReductionFn : DmgReductionFn
     {
         

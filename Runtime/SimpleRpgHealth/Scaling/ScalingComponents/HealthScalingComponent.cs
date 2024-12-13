@@ -4,7 +4,7 @@ using ElectricDrill.SimpleRpgHealth;
 using UnityEngine;
 
 namespace ElectricDrill.SimpleRpgCore.Scaling {
-    [CreateAssetMenu(fileName = "New Health Scaling Component", menuName = "Simple RPG/Scaling/Health Component")]
+    [CreateAssetMenu(fileName = "New Health Scaling Component", menuName = "Simple RPG Health/Scaling/Health Component")]
     public class HealthScalingComponent : ScalingComponent
     {
         private enum HealthScalingAttributes

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace ElectricDrill.SimpleRpgHealth {
-    [CreateAssetMenu(fileName = "FlatDefReductionFn", menuName = "Simple RPG/Def Reduction Functions/Flat Def Reduction")]
+    [CreateAssetMenu(fileName = "FlatDefReductionFn", menuName = "Simple RPG Health/Def Reduction Functions/Flat Def Reduction")]
     public class FlatDefReductionFn : DefReductionFn
     {
         [SerializeField] private double constant = 1.0;

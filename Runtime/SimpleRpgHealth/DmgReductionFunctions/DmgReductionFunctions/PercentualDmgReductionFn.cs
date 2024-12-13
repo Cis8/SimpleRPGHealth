@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace ElectricDrill.SimpleRpgHealth {
-    [CreateAssetMenu(fileName = "PercentualDmgReductionFn", menuName = "Simple RPG/Dmg Reduction Functions/Percentual Dmg Reduction")]
+    [CreateAssetMenu(fileName = "PercentualDmgReductionFn", menuName = "Simple RPG Health/Dmg Reduction Functions/Percentual Dmg Reduction")]
     public class PercentualDmgReductionFn : DmgReductionFn
     {
         public override long ReducedDmg(long amount, double defensiveStatValue) {
