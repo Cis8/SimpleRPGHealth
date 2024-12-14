@@ -128,6 +128,7 @@ namespace ElectricDrill.SimpleRpgHealth
         /// current health to trespass the max health, current health is set to max health instead.
         /// </summary>
         /// <param name="amount">Health amount to be added</param>
+        /// <returns>Actual amount of health gained</returns>
         private long AddHealth(long amount) {
             Assert.IsTrue(amount >= 0, $"Health amount to be added must be greater than or equal to 0, was {amount}");
             long previousHp = hp;
@@ -167,7 +168,8 @@ namespace ElectricDrill.SimpleRpgHealth
             }
             
             var gainedHealth = AddHealth(healedAmount);
-            var receivedHealInfo = new ReceivedHealInfo(gainedHealth, info, _core);
+            var healAmountInfo = new HealAmountInfo(info.Amount, healedAmount, gainedHealth);
+            var receivedHealInfo = new ReceivedHealInfo(healAmountInfo, info, _core);
             entityHealedEvent.Raise(receivedHealInfo);
         }
 

@@ -3,25 +3,24 @@ using ElectricDrill.SimpleRpgCore;
 namespace ElectricDrill.SimpleRpgHealth {
     public struct ReceivedHealInfo
     {
-        public long Amount { get; }
+        public HealAmountInfo HealAmount { get; }
         public Source Source { get; }
         public EntityCore Healer { get; }
-
         public EntityCore Target { get; }
         public bool IsCritical { get; }
 
         public static HealInfoAmount Builder => ReceivedHealInfoStepBuilder.Builder;
 
-        public ReceivedHealInfo(long amount, PreHealInfo preHealInfo, EntityCore target) {
-            Amount = amount;
+        public ReceivedHealInfo(HealAmountInfo healAmount, PreHealInfo preHealInfo, EntityCore target) {
+            HealAmount = healAmount;
             Source = preHealInfo.Source;
             Healer = preHealInfo.Healer;
             Target = target;
             IsCritical = preHealInfo.IsCritical;
         }
 
-        private ReceivedHealInfo(long amount, Source source, EntityCore healer, EntityCore target, bool isCritical = false) {
-            Amount = amount;
+        private ReceivedHealInfo(HealAmountInfo healAmount, Source source, EntityCore healer, EntityCore target, bool isCritical = false) {
+            HealAmount = healAmount;
             Source = source;
             Healer = healer;
             Target = target;
@@ -30,7 +29,7 @@ namespace ElectricDrill.SimpleRpgHealth {
 
         public interface HealInfoAmount
         {
-            HealInfoSource WithAmount(long amount);
+            HealInfoSource WithAmount(HealAmountInfo healAmount);
         }
 
         public interface HealInfoSource
@@ -50,7 +49,7 @@ namespace ElectricDrill.SimpleRpgHealth {
 
         public sealed class ReceivedHealInfoStepBuilder : HealInfoAmount, HealInfoSource, HealInfoHealer, HealInfoTarget
         {
-            private long amount;
+            private HealAmountInfo healAmount;
             private Source source;
             private EntityCore healer;
             private EntityCore target;
@@ -58,9 +57,9 @@ namespace ElectricDrill.SimpleRpgHealth {
 
             public static HealInfoAmount Builder => new ReceivedHealInfoStepBuilder();
 
-            public HealInfoSource WithAmount(long amount)
+            public HealInfoSource WithAmount(HealAmountInfo healAmount)
             {
-                this.amount = amount;
+                this.healAmount = healAmount;
                 return this;
             }
 
@@ -90,7 +89,7 @@ namespace ElectricDrill.SimpleRpgHealth {
 
             public ReceivedHealInfo Build()
             {
-                return new ReceivedHealInfo(amount, source, healer, target, isCritical);
+                return new ReceivedHealInfo(healAmount, source, healer, target, isCritical);
             }
         }
     }
