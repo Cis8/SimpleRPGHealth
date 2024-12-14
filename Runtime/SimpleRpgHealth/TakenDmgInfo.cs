@@ -3,7 +3,7 @@ using ElectricDrill.SimpleRpgCore;
 namespace ElectricDrill.SimpleRpgHealth {
     public struct TakenDmgInfo
     {
-        public long Amount { get; }
+        public DmgAmountInfo DmgAmountInfo { get; }
         public DmgType Type { get; }
         public Source Source { get; }
         public EntityCore Dealer { get; }
@@ -13,8 +13,8 @@ namespace ElectricDrill.SimpleRpgHealth {
 
         public static DmgInfoAmount Builder => TakenDmgInfoStepBuilder.Builder;
 
-        public TakenDmgInfo(long amount, PreDmgInfo preDmgInfo, EntityCore target) {
-            Amount = amount;
+        public TakenDmgInfo(DmgAmountInfo dmgAmountInfo, PreDmgInfo preDmgInfo, EntityCore target) {
+            DmgAmountInfo = dmgAmountInfo;
             Type = preDmgInfo.Type;
             Source = preDmgInfo.Source;
             Dealer = preDmgInfo.Dealer;
@@ -22,8 +22,8 @@ namespace ElectricDrill.SimpleRpgHealth {
             IsCritical = preDmgInfo.IsCritical;
         }
         
-        private TakenDmgInfo(long amount, DmgType type, Source source, EntityCore dealer, EntityCore target, bool isCritical = false) {
-            Amount = amount;
+        private TakenDmgInfo(DmgAmountInfo dmgAmountInfo, DmgType type, Source source, EntityCore dealer, EntityCore target, bool isCritical = false) {
+            DmgAmountInfo = dmgAmountInfo;
             Type = type;
             Source = source;
             Dealer = dealer;
@@ -33,7 +33,7 @@ namespace ElectricDrill.SimpleRpgHealth {
 
         public interface DmgInfoAmount
         {
-            DmgInfoType WithAmount(long amount);
+            DmgInfoType WithDmgAmountInfo(DmgAmountInfo dmgAmountInfo);
         }
         
          public interface DmgInfoType
@@ -58,7 +58,7 @@ namespace ElectricDrill.SimpleRpgHealth {
 
         public sealed class TakenDmgInfoStepBuilder : DmgInfoAmount, DmgInfoType, DmgInfoSource, DmgInfoDealer, DmgInfoTarget
         {
-            private long amount;
+            private DmgAmountInfo dmgAmountInfo;
             private DmgType type;
             private Source source;
             private EntityCore dealer;
@@ -67,9 +67,9 @@ namespace ElectricDrill.SimpleRpgHealth {
             
             public static DmgInfoAmount Builder => new TakenDmgInfoStepBuilder();
             
-            public DmgInfoType WithAmount(long amount)
+            public DmgInfoType WithDmgAmountInfo(DmgAmountInfo dmgAmountInfo)
             {
-                this.amount = amount;
+                this.dmgAmountInfo = dmgAmountInfo;
                 return this;
             }
 
@@ -105,7 +105,7 @@ namespace ElectricDrill.SimpleRpgHealth {
 
             public TakenDmgInfo Build()
             {
-                return new TakenDmgInfo(amount, type, source, dealer, target, isCritical);
+                return new TakenDmgInfo(dmgAmountInfo, type, source, dealer, target, isCritical);
             }
 
         }

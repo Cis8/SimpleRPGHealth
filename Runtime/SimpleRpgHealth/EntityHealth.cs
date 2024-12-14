@@ -94,10 +94,17 @@ namespace ElectricDrill.SimpleRpgHealth
             }
 
             // subtract the barrier-reduced dmg to be taken to the entity's health
-            RemoveHealth(barrierReducedDmgToBeTaken);
-
-            // the amount of damage taken is the amount of damage reduced by the defensive stat, but not by the barrier
-            var takenDmgInfo = new TakenDmgInfo(dmgToBeTaken, preDmg, _core);
+            var healthLost = RemoveHealth(barrierReducedDmgToBeTaken);
+            
+            // create DmgAmountInfo with all parameters
+            var dmgAmountInfo = new DmgAmountInfo(
+                preDmg.Amount,
+                dmgToBeTaken,
+                barrierReducedDmgToBeTaken,
+                healthLost
+            );
+            
+            var takenDmgInfo = new TakenDmgInfo(dmgAmountInfo, preDmg, _core);
             takenDmgInfoEvent?.Raise(takenDmgInfo);
             if (IsDead()) {
                 entityDiedEvent.Raise(this, takenDmgInfo);
