@@ -25,6 +25,7 @@ namespace ElectricDrill.SimpleRpgHealth
         [SerializeField, HideInInspector] internal LongRef hp;
         [SerializeField, HideInInspector] internal LongRef barrier;
         [SerializeField, HideInInspector] private Stat healAmountModifierStat;
+        [SerializeField, HideInInspector] private LifestealConfig lifestealConfig;
         [SerializeField] private OnDeathStrategy onDeathStrategy;
 
         private EntityCore _core;
@@ -140,8 +141,9 @@ namespace ElectricDrill.SimpleRpgHealth
         /// Subtracts <paramref name="amount"/> health to the current health. If <paramref name="amount"/> would cause
         /// the current health to go below zero and HealthCanBeNegative is false, it is set to 0 instead.
         /// </summary>
+        /// <returns>Actual amount of health lost</returns>
         /// <param name="amount">Health amount to be removed</param>
-        private void RemoveHealth(long amount) {
+        private long RemoveHealth(long amount) {
             Assert.IsTrue(amount >= 0, $"Health amount to be removed must be greater than or equal to 0, was {amount}");
             long previousHp = hp;
             long newHp = hp - amount;
@@ -149,7 +151,9 @@ namespace ElectricDrill.SimpleRpgHealth
                 newHp = 0;
             }
             hp.Value = newHp;
-            lostHealthEvent?.Raise(this, previousHp - hp);
+            var lostHp = previousHp - hp;
+            lostHealthEvent?.Raise(this, lostHp);
+            return lostHp;
         }
         
         public void Heal(PreHealInfo info) {
@@ -167,6 +171,43 @@ namespace ElectricDrill.SimpleRpgHealth
             entityHealedEvent.Raise(receivedHealInfo);
         }
 
+        private void CheckLifesteal(TakenDmgInfo dmgInfo) {
+            if (dmgInfo.Dealer != _core) return;
+            if (!lifestealConfig) return;
+            if (!lifestealConfig.LifestealMappings.ContainsKey(dmgInfo.Type)) return;
+            var lifestealStat = lifestealConfig.LifestealMappings[dmgInfo.Type].LifestealStat;
+            if (!lifestealStat) return;
+            if (!_stats.StatSet.Contains(lifestealStat)) return;
+            
+            Percentage lifestealStatValue = _stats.Get(lifestealStat);
+            long dmgToLifesteal;
+            
+            switch (lifestealConfig.LifestealMappings[dmgInfo.Type].DmgStateSelector) {
+                case DmgStateSelector.Raw:
+                    dmgToLifesteal = dmgInfo.DmgAmountInfo.RawAmount;
+                    break;
+                case DmgStateSelector.DefReduced:
+                    dmgToLifesteal = dmgInfo.DmgAmountInfo.DefReducedAmount;
+                    break;
+                case DmgStateSelector.DefBarrierReduced:
+                    dmgToLifesteal = dmgInfo.DmgAmountInfo.DefBarrierReducedAmount;
+                    break;
+                case DmgStateSelector.Net:
+                    dmgToLifesteal = dmgInfo.DmgAmountInfo.NetAmount;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
+            var lifestealAmount = (long) (dmgToLifesteal * lifestealStatValue);
+            
+            Heal(PreHealInfo.Builder
+                .WithAmount(lifestealAmount)
+                .WithSource(lifestealConfig.LifestealMappings[dmgInfo.Type].LifestealSource)
+                .WithHealer(_core)
+                .Build());
+        }
+        
         /// <summary>
         ///
         /// </summary>
@@ -220,6 +261,7 @@ namespace ElectricDrill.SimpleRpgHealth
         private void OnEnable() {
             _core = GetComponent<EntityCore>();
             _core.Level.OnLevelUp += OnLevelUp;
+            takenDmgInfoEvent.OnEventRaised += CheckLifesteal;
 #if UNITY_EDITOR
             Selection.selectionChanged += OnSelectionChanged;
 #endif
@@ -228,6 +270,7 @@ namespace ElectricDrill.SimpleRpgHealth
 
         private void OnDisable() {
             _core.Level.OnLevelUp -= OnLevelUp;
+            takenDmgInfoEvent.OnEventRaised -= CheckLifesteal;
 #if UNITY_EDITOR
             Selection.selectionChanged -= OnSelectionChanged;
 #endif

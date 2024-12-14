@@ -13,6 +13,7 @@ namespace ElectricDrill.SimpleRpgCore.CstmEditor
         SerializedProperty maxHp;
         SerializedProperty hp;
         SerializedProperty healAmountModifier;
+        SerializedProperty lifestealConfig;
         SerializedProperty preDmgInfoEvent;
         SerializedProperty takenDmgInfoEvent;
         SerializedProperty gainedHealthEvent;
@@ -29,6 +30,7 @@ namespace ElectricDrill.SimpleRpgCore.CstmEditor
             maxHp = serializedObject.FindProperty("maxHp");
             hp = serializedObject.FindProperty("hp");
             healAmountModifier = serializedObject.FindProperty("healAmountModifierStat");
+            lifestealConfig = serializedObject.FindProperty("lifestealConfig");
             preDmgInfoEvent = serializedObject.FindProperty("preDmgInfoEvent");
             takenDmgInfoEvent = serializedObject.FindProperty("takenDmgInfoEvent");
             gainedHealthEvent = serializedObject.FindProperty("gainedHealthEvent");
@@ -76,6 +78,9 @@ namespace ElectricDrill.SimpleRpgCore.CstmEditor
 
             // Draw the healAmountModifier property with a label
             EditorGUILayout.PropertyField(healAmountModifier, new GUIContent("(o) Heal Amount Modifier"));
+            
+            // Draw the lifestealConfig property
+            EditorGUILayout.PropertyField(lifestealConfig);
 
             // Group the game events in a foldout group
             EditorGUILayout.LabelField("Events", EditorStyles.boldLabel);
