@@ -10,7 +10,8 @@ namespace ElectricDrill.SimpleRpgCore.CstmEditor
         SerializedProperty healthCanBeNegative;
         SerializedProperty deathThreshold;
         SerializedProperty useClassMaxHp;
-        SerializedProperty maxHp;
+        SerializedProperty baseMaxHp;
+        SerializedProperty totalMaxHp;
         SerializedProperty hp;
         SerializedProperty healAmountModifier;
         SerializedProperty lifestealConfig;
@@ -27,7 +28,8 @@ namespace ElectricDrill.SimpleRpgCore.CstmEditor
             healthCanBeNegative = serializedObject.FindProperty("healthCanBeNegative");
             deathThreshold = serializedObject.FindProperty("deathThreshold");
             useClassMaxHp = serializedObject.FindProperty("useClassMaxHp");
-            maxHp = serializedObject.FindProperty("maxHp");
+            baseMaxHp = serializedObject.FindProperty("baseMaxHp");
+            totalMaxHp = serializedObject.FindProperty("totalMaxHp");
             hp = serializedObject.FindProperty("hp");
             healAmountModifier = serializedObject.FindProperty("healAmountModifierStat");
             lifestealConfig = serializedObject.FindProperty("lifestealConfig");
@@ -63,16 +65,22 @@ namespace ElectricDrill.SimpleRpgCore.CstmEditor
             // Conditionally set the maxHp property to read-only based on useClassMaxHp
             if (useClassMaxHp.boolValue)
             {
-                maxHp.FindPropertyRelative("isReadOnly").boolValue = true;
+                baseMaxHp.FindPropertyRelative("isReadOnly").boolValue = true;
             }
             else
             {
-                maxHp.FindPropertyRelative("isReadOnly").boolValue = false;
+                baseMaxHp.FindPropertyRelative("isReadOnly").boolValue = false;
             }
-            
-            // Draw the maxHp property
-            EditorGUILayout.PropertyField(maxHp);
 
+            // Draw the base maxHp property
+            EditorGUILayout.PropertyField(baseMaxHp);
+
+            // Total max hp is read-only
+            totalMaxHp.FindPropertyRelative("isReadOnly").boolValue = true;
+            
+            // Draw the total maxHp property
+            EditorGUILayout.PropertyField(totalMaxHp);
+            
             // Draw the hp property
             EditorGUILayout.PropertyField(hp);
 

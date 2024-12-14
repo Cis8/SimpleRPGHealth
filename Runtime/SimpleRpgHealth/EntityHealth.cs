@@ -21,7 +21,10 @@ namespace ElectricDrill.SimpleRpgHealth
         // if true, the max hp will be taken from the class and assigned to _maxHp, overriding any value set in the inspector
         // if false, the value set in the inspector will be used
         [SerializeField, HideInInspector] private bool useClassMaxHp = false;
-        [SerializeField, HideInInspector] internal LongRef maxHp;
+        [SerializeField] internal LongRef baseMaxHp;
+        internal long _flatMaxHpModifier = 0;
+        internal Percentage _percentageMaxHpModifier = 0;
+        [SerializeField, HideInInspector] internal LongRef totalMaxHp;
         [SerializeField, HideInInspector] internal LongRef hp;
         [SerializeField, HideInInspector] internal LongRef barrier;
         [SerializeField, HideInInspector] private Stat healAmountModifierStat;
@@ -41,7 +44,7 @@ namespace ElectricDrill.SimpleRpgHealth
         [SerializeField, HideInInspector] private PreHealGameEvent preHealEvent;
         [SerializeField, HideInInspector] private EntityHealedGameEvent entityHealedEvent;
 
-        public long MaxHp => maxHp;
+        public long MaxHp => totalMaxHp;
         public long Hp => hp;
         public long Barrier => barrier;
         
@@ -53,15 +56,8 @@ namespace ElectricDrill.SimpleRpgHealth
             Assert.IsTrue(healAmountModifierStat == null || _stats.StatSet.Contains(healAmountModifierStat), $"StatSet of {gameObject.name} doesn't contain the stat {healAmountModifierStat}");
             _entityClass = GetComponent<EntityClass>();
             _core = GetComponent<EntityCore>();
-            SetupHealth();
-        }
-
-        public void SetupHealth() {
-            if (useClassMaxHp) {
-                Assert.IsNotNull(_entityClass, $"Class of {gameObject.name} is missing");
-                maxHp.Value = _entityClass.Class.GetMaxHpAt(_core.Level);
-            }
-            hp.Value = maxHp;
+            SetupBaseMaxHp();
+            Assert.IsFalse(MaxHp <= 0, $"Max HP of an Entity must be greater than 0. {name}'s Max HP was {MaxHp}");
         }
 
         private void Start() {
@@ -69,6 +65,29 @@ namespace ElectricDrill.SimpleRpgHealth
         }
 
         private void Update() {
+        }
+        
+        public void SetupBaseMaxHp() {
+            if (useClassMaxHp) {
+                Assert.IsNotNull(_entityClass, $"Class of {gameObject.name} is missing");
+                baseMaxHp.Value = _entityClass.Class.GetMaxHpAt(_core.Level);
+            }
+            SetupMaxHp();
+        }
+        
+        private void SetupMaxHp() {
+            totalMaxHp.Value = baseMaxHp + _flatMaxHpModifier + (long) (baseMaxHp * _percentageMaxHpModifier);
+            hp.Value = totalMaxHp;
+        }
+        
+        public void AddMaxHpFlatModifier(long amount) {
+            _flatMaxHpModifier += amount;
+            SetupMaxHp();
+        }
+        
+        public void AddMaxHpPercentageModifier(Percentage amount) {
+            _percentageMaxHpModifier += amount;
+            SetupMaxHp();
         }
 
         public virtual void TakeDamage(PreDmgInfo preDmg) {
@@ -132,7 +151,7 @@ namespace ElectricDrill.SimpleRpgHealth
         private long AddHealth(long amount) {
             Assert.IsTrue(amount >= 0, $"Health amount to be added must be greater than or equal to 0, was {amount}");
             long previousHp = hp;
-            hp.Value = Math.Min(hp + amount, maxHp);
+            hp.Value = Math.Min(hp + amount, MaxHp);
             long gainedHealth = hp - previousHp;
             gainedHealthEvent?.Raise(this, gainedHealth);
             return gainedHealth;
@@ -227,8 +246,7 @@ namespace ElectricDrill.SimpleRpgHealth
         }
         
         private void OnLevelUp(int level) {
-            if (useClassMaxHp)
-                maxHp.Value = _entityClass.Class.GetMaxHpAt(level);
+            SetupBaseMaxHp();
             // todo add flag to decide if health should be restored on level-up
         }
         
@@ -250,7 +268,6 @@ namespace ElectricDrill.SimpleRpgHealth
         private void ValidateConstraints() {
             Assert.IsNotNull(preDmgInfoEvent, $"PreDmgGameEvent is missing for {gameObject.name}");
             Assert.IsNotNull(takenDmgInfoEvent, $"TakenDmgGameEvent is missing for {gameObject.name}");
-            Assert.IsFalse(maxHp <= 0, $"Max HP of an Entity must be greater than 0. {name}'s Max HP was {MaxHp}");
             Assert.IsFalse(hp < 0, $"HP of an Entity must be greater than or equal to 0. {name}'s HP was {Hp}");
             if (healthCanBeNegative)
                 Assert.IsNotNull(deathThreshold, $"Death Threshold is missing for {gameObject.name}");
