@@ -58,11 +58,11 @@ namespace ElectricDrill.SimpleRpgHealth
             Assert.IsTrue(healAmountModifierStat == null || _stats.StatSet.Contains(healAmountModifierStat), $"StatSet of {gameObject.name} doesn't contain the stat {healAmountModifierStat}");
             _entityClass = GetComponent<EntityClass>();
             _core = GetComponent<EntityCore>();
+            SetupBaseMaxHp();
+            Assert.IsFalse(MaxHp <= 0, $"Max HP of an Entity must be greater than 0. {name}'s Max HP was {MaxHp}");
         }
 
         private void Start() {
-            SetupBaseMaxHp();
-            Assert.IsFalse(MaxHp <= 0, $"Max HP of an Entity must be greater than 0. {name}'s Max HP was {MaxHp}");
         }
 
         private void Update() {
