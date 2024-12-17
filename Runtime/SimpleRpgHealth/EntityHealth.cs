@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using ElectricDrill.SimpleRpgCore;
 using ElectricDrill.SimpleRpgCore.Events;
+using ElectricDrill.SimpleRpgCore.Scaling;
 using ElectricDrill.SimpleRpgCore.Stats;
 using ElectricDrill.SimpleRpgCore.Utils;
 using JetBrains.Annotations;
@@ -24,6 +25,7 @@ namespace ElectricDrill.SimpleRpgHealth
         [SerializeField] internal LongRef baseMaxHp;
         internal long _flatMaxHpModifier = 0;
         internal Percentage _percentageMaxHpModifier = 0;
+        [SerializeField, HideInInspector] private AttributesScalingComponent healthAttributesScaling;
         [SerializeField, HideInInspector] internal LongRef totalMaxHp;
         [SerializeField, HideInInspector] internal LongRef hp;
         [SerializeField, HideInInspector] internal LongRef barrier;
@@ -56,12 +58,11 @@ namespace ElectricDrill.SimpleRpgHealth
             Assert.IsTrue(healAmountModifierStat == null || _stats.StatSet.Contains(healAmountModifierStat), $"StatSet of {gameObject.name} doesn't contain the stat {healAmountModifierStat}");
             _entityClass = GetComponent<EntityClass>();
             _core = GetComponent<EntityCore>();
-            SetupBaseMaxHp();
-            Assert.IsFalse(MaxHp <= 0, $"Max HP of an Entity must be greater than 0. {name}'s Max HP was {MaxHp}");
         }
 
         private void Start() {
-
+            SetupBaseMaxHp();
+            Assert.IsFalse(MaxHp <= 0, $"Max HP of an Entity must be greater than 0. {name}'s Max HP was {MaxHp}");
         }
 
         private void Update() {
@@ -76,7 +77,10 @@ namespace ElectricDrill.SimpleRpgHealth
         }
         
         private void SetupMaxHp() {
-            totalMaxHp.Value = baseMaxHp + _flatMaxHpModifier + (long) (baseMaxHp * _percentageMaxHpModifier);
+            totalMaxHp.Value = baseMaxHp + _flatMaxHpModifier;
+            if (healthAttributesScaling != null)
+                totalMaxHp.Value += healthAttributesScaling.CalculateValue(_core);
+            totalMaxHp.Value += (long)(totalMaxHp.Value * (double)_percentageMaxHpModifier);
             hp.Value = totalMaxHp;
         }
         

@@ -11,6 +11,7 @@ namespace ElectricDrill.SimpleRpgCore.CstmEditor
         SerializedProperty deathThreshold;
         SerializedProperty useClassMaxHp;
         SerializedProperty baseMaxHp;
+        SerializedProperty healthAttributesScaling;
         SerializedProperty totalMaxHp;
         SerializedProperty hp;
         SerializedProperty healAmountModifier;
@@ -29,6 +30,7 @@ namespace ElectricDrill.SimpleRpgCore.CstmEditor
             deathThreshold = serializedObject.FindProperty("deathThreshold");
             useClassMaxHp = serializedObject.FindProperty("useClassMaxHp");
             baseMaxHp = serializedObject.FindProperty("baseMaxHp");
+            healthAttributesScaling = serializedObject.FindProperty("healthAttributesScaling");
             totalMaxHp = serializedObject.FindProperty("totalMaxHp");
             hp = serializedObject.FindProperty("hp");
             healAmountModifier = serializedObject.FindProperty("healAmountModifierStat");
@@ -74,6 +76,9 @@ namespace ElectricDrill.SimpleRpgCore.CstmEditor
 
             // Draw the base maxHp property
             EditorGUILayout.PropertyField(baseMaxHp);
+            
+            // Draw the healthAttributesScaling property
+            EditorGUILayout.PropertyField(healthAttributesScaling, new GUIContent("(o) Health Attributes Scaling"));
 
             // Total max hp is read-only
             totalMaxHp.FindPropertyRelative("isReadOnly").boolValue = true;
@@ -106,39 +111,5 @@ namespace ElectricDrill.SimpleRpgCore.CstmEditor
 
             serializedObject.ApplyModifiedProperties();
         }
-
-        /*private void DrawMaxHpProperty(SerializedProperty property)
-        {
-            var useConstant = property.FindPropertyRelative("UseConstant");
-            var constantValue = property.FindPropertyRelative("ConstantValue");
-            var variable = property.FindPropertyRelative("Variable");
-
-            EditorGUILayout.BeginHorizontal();
-            var position = EditorGUILayout.GetControlRect();
-
-            position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Max Hp"));
-
-            var indent = EditorGUI.indentLevel;
-            EditorGUI.indentLevel = 0;
-
-            var toggleRect = new Rect(position.x, position.y, 20, position.height);
-            var labelRect = new Rect(position.x + 25, position.y, 100, position.height);
-            var valueRect = new Rect(position.x + 130, position.y, position.width - 130, position.height);
-
-            useConstant.boolValue = EditorGUI.Toggle(toggleRect, useConstant.boolValue);
-            EditorGUI.LabelField(labelRect, "Use Constant");
-
-            if (useConstant.boolValue) {
-                valueRect.position = new Vector2(valueRect.position.x + 2, valueRect.position.y);
-                EditorGUI.LabelField(valueRect, constantValue.longValue.ToString());
-            }
-            else
-            {
-                EditorGUI.PropertyField(valueRect, variable, GUIContent.none);
-            }
-
-            EditorGUI.indentLevel = indent;
-            EditorGUILayout.EndHorizontal();
-        }*/
     }
 }
