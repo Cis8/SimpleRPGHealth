@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dfcacd2599878c4cb4794e53d034f27, type: 3}
   m_Name: HealthEventsGenerator
   m_EditorClassIdentifier: 
+  rootNamespace: ElectricDrill.SimpleRpgCore.Events
   eventsToGenerate:
   - eventName: EntityGainedHealth
     documentation: 
@@ -60,5 +61,20 @@ MonoBehaviour:
       nativeType: 1
       monoScript: {fileID: 11500000, guid: 3802f351f7b145e6889e2d05f3fbc149, type: 3}
     isGenerated: 1
+  - eventName: EntityMaxHealthChanged
+    documentation: The entity whose Max HP changed, the new Max HP, and the old Max
+      HP
+    parameters:
+    - parameterType: 1
+      nativeType: 1
+      monoScript: {fileID: 11500000, guid: d2d0622dc6a2ac347812d35d5c67273a, type: 3}
+    - parameterType: 0
+      nativeType: 1
+      monoScript: {fileID: 11500000, guid: 3802f351f7b145e6889e2d05f3fbc149, type: 3}
+    - parameterType: 0
+      nativeType: 1
+      monoScript: {fileID: 11500000, guid: 3802f351f7b145e6889e2d05f3fbc149, type: 3}
+    isGenerated: 1
   baseSaveLocation: Packages/com.electricdrill.simple-rpg-health/Runtime/SimpleRpgHealth/Events
-  previousSaveLocation: Packages/com.electricdrill.simple-rpg-core/Runtime/ElectricDrill/SimpleRpgCore/Events
+  menuBasePath: Simple RPG Health/Events/Generated
+  previousSaveLocation: Packages/com.electricdrill.simple-rpg-health/Runtime/SimpleRpgHealth/Events

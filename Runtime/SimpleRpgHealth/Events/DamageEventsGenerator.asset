@@ -32,4 +32,5 @@ MonoBehaviour:
       monoScript: {fileID: 11500000, guid: 39f37772fc10564479c048779944d172, type: 3}
     isGenerated: 0
   baseSaveLocation: Packages/com.electricdrill.simple-rpg-health/Runtime/SimpleRpgHealth/Events
+  menuBasePath: Simple RPG Health/Events/Generated
   previousSaveLocation: Packages/com.electricdrill.simple-rpg-core/Runtime/ElectricDrill/SimpleRpgCore/Events

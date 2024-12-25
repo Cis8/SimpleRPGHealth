@@ -1,4 +1,6 @@
+using UnityEngine;
 using ElectricDrill.SimpleRpgHealth;
+using ElectricDrill.SimpleRpgCore;
 
 namespace ElectricDrill.SimpleRpgCore.Events
 {
