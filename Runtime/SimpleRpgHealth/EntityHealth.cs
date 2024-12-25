@@ -50,6 +50,7 @@ namespace ElectricDrill.SimpleRpgHealth
         public long Hp => hp;
         public long Barrier => barrier;
         
+        public OnDeathStrategy OnDeathStrategy { get => onDeathStrategy; set => onDeathStrategy = value; }
         public bool HealthCanBeNegative { get => healthCanBeNegative; set => healthCanBeNegative = value; }
 
         private void Awake() {
