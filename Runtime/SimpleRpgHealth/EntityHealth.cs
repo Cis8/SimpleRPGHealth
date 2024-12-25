@@ -49,6 +49,7 @@ namespace ElectricDrill.SimpleRpgHealth
         [SerializeField, HideInInspector] private PreHealGameEvent preHealEvent;
         [SerializeField, HideInInspector] private EntityHealedGameEvent entityHealedEvent;
 
+        public EntityCore Core => _core;
         public long MaxHp => totalMaxHp;
         public long Hp => hp;
         public long Barrier => barrier;
