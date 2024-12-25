@@ -26,8 +26,10 @@ namespace ElectricDrill.SimpleRpgHealth
         internal long _flatMaxHpModifier = 0;
         internal Percentage _percentageMaxHpModifier = 0;
         [SerializeField, HideInInspector] private AttributesScalingComponent healthAttributesScaling;
+        private long _previousMaxHp = 0; // used to check if max hp has changed
         [SerializeField, HideInInspector] internal LongRef totalMaxHp;
         [SerializeField, HideInInspector] internal LongRef hp;
+        [SerializeField, HideInInspector] internal bool restoreHpOnLevelUp = true;
         [SerializeField, HideInInspector] internal LongRef barrier;
         [SerializeField, HideInInspector] private Stat healAmountModifierStat;
         [SerializeField, HideInInspector] private LifestealConfig lifestealConfig;
@@ -40,6 +42,7 @@ namespace ElectricDrill.SimpleRpgHealth
         // Events
         [SerializeField, HideInInspector] private PreDmgGameEvent preDmgInfoEvent;
         [SerializeField, HideInInspector] private TakenDmgGameEvent takenDmgInfoEvent;
+        [SerializeField, HideInInspector] private EntityMaxHealthChangedGameEvent maxHealthChangedEvent;
         [SerializeField, HideInInspector] private EntityGainedHealthGameEvent gainedHealthEvent;
         [SerializeField, HideInInspector] private EntityLostHealthGameEvent lostHealthEvent;
         [SerializeField, HideInInspector] private EntityDiedGameEvent entityDiedEvent;
@@ -60,6 +63,7 @@ namespace ElectricDrill.SimpleRpgHealth
             _entityClass = GetComponent<EntityClass>();
             _core = GetComponent<EntityCore>();
             SetupBaseMaxHp();
+            SetHpToMax();
             Assert.IsFalse(MaxHp <= 0, $"Max HP of an Entity must be greater than 0. {name}'s Max HP was {MaxHp}");
         }
 
@@ -82,7 +86,12 @@ namespace ElectricDrill.SimpleRpgHealth
             if (healthAttributesScaling != null)
                 totalMaxHp.Value += healthAttributesScaling.CalculateValue(_core);
             totalMaxHp.Value += (long)(totalMaxHp.Value * (double)_percentageMaxHpModifier);
-            hp.Value = totalMaxHp;
+            
+            // check if max hp has changed
+            if (_previousMaxHp != totalMaxHp) {
+                maxHealthChangedEvent?.Raise(this, totalMaxHp, _previousMaxHp);
+                _previousMaxHp = totalMaxHp;
+            }
         }
         
         public void AddMaxHpFlatModifier(long amount) {
@@ -145,6 +154,10 @@ namespace ElectricDrill.SimpleRpgHealth
         private void RemoveBarrier(long amount) {
             Assert.IsTrue(amount >= 0, $"Barrier amount to be removed must be greater than or equal to 0, was {amount}");
             barrier.Value = Math.Max(0, barrier - amount);
+        }
+        
+        public void SetHpToMax() {
+            AddHealth(MaxHp);
         }
         
         /// <summary>
@@ -252,7 +265,8 @@ namespace ElectricDrill.SimpleRpgHealth
         
         private void OnLevelUp(int level) {
             SetupBaseMaxHp();
-            // todo add flag to decide if health should be restored on level-up
+            if (restoreHpOnLevelUp)
+                SetHpToMax();
         }
         
         internal static long CalculateReducedDmg(long amount, long piercingStatValue, [CanBeNull] DefReductionFn defReductionFn, long defensiveStatValue, [CanBeNull] DmgReductionFn dmgReductionFn) {
@@ -276,6 +290,9 @@ namespace ElectricDrill.SimpleRpgHealth
             Assert.IsFalse(hp < 0, $"HP of an Entity must be greater than or equal to 0. {name}'s HP was {Hp}");
             if (healthCanBeNegative)
                 Assert.IsNotNull(deathThreshold, $"Death Threshold is missing for {gameObject.name}");
+            Assert.IsNotNull(gainedHealthEvent, $"GainedHealthGameEvent is missing for {gameObject.name}");
+            Assert.IsNotNull(lostHealthEvent, $"LostHealthGameEvent is missing for {gameObject.name}");
+            Assert.IsNotNull(maxHealthChangedEvent, $"MaxHealthChangedGameEvent is missing for {gameObject.name}");
             Assert.IsNotNull(onDeathStrategy, $"OnDeathStrategy is missing for {gameObject.name}");
             Assert.IsNotNull(entityDiedEvent, $"DiedGameEvent is missing for {gameObject.name}");
             Assert.IsNotNull(preHealEvent, $"PreHealGameEvent is missing for {gameObject.name}");

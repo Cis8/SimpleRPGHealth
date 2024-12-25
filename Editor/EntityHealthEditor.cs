@@ -14,12 +14,14 @@ namespace ElectricDrill.SimpleRpgCore.CstmEditor
         SerializedProperty healthAttributesScaling;
         SerializedProperty totalMaxHp;
         SerializedProperty hp;
+        private SerializedProperty restoreHpOnLevelUp;
         SerializedProperty healAmountModifier;
         SerializedProperty lifestealConfig;
         SerializedProperty preDmgInfoEvent;
         SerializedProperty takenDmgInfoEvent;
         SerializedProperty gainedHealthEvent;
         SerializedProperty lostHealthEvent;
+        SerializedProperty maxHealthChangedEvent;
         SerializedProperty entityDiedEvent;
         SerializedProperty preHealEvent;
         SerializedProperty entityHealedEvent;
@@ -33,12 +35,14 @@ namespace ElectricDrill.SimpleRpgCore.CstmEditor
             healthAttributesScaling = serializedObject.FindProperty("healthAttributesScaling");
             totalMaxHp = serializedObject.FindProperty("totalMaxHp");
             hp = serializedObject.FindProperty("hp");
+            restoreHpOnLevelUp = serializedObject.FindProperty("restoreHpOnLevelUp");
             healAmountModifier = serializedObject.FindProperty("healAmountModifierStat");
             lifestealConfig = serializedObject.FindProperty("lifestealConfig");
             preDmgInfoEvent = serializedObject.FindProperty("preDmgInfoEvent");
             takenDmgInfoEvent = serializedObject.FindProperty("takenDmgInfoEvent");
             gainedHealthEvent = serializedObject.FindProperty("gainedHealthEvent");
             lostHealthEvent = serializedObject.FindProperty("lostHealthEvent");
+            maxHealthChangedEvent = serializedObject.FindProperty("maxHealthChangedEvent");
             entityDiedEvent = serializedObject.FindProperty("entityDiedEvent");
             preHealEvent = serializedObject.FindProperty("preHealEvent");
             entityHealedEvent = serializedObject.FindProperty("entityHealedEvent");
@@ -88,6 +92,9 @@ namespace ElectricDrill.SimpleRpgCore.CstmEditor
             
             // Draw the hp property
             EditorGUILayout.PropertyField(hp);
+            
+            // Draw the restoreHpOnLevelUp property
+            EditorGUILayout.PropertyField(restoreHpOnLevelUp);
 
             // Draw the healAmountModifier property with a label
             EditorGUILayout.PropertyField(healAmountModifier, new GUIContent("(o) Heal Amount Modifier"));
@@ -102,6 +109,7 @@ namespace ElectricDrill.SimpleRpgCore.CstmEditor
             EditorGUILayout.PropertyField(takenDmgInfoEvent);
             EditorGUILayout.PropertyField(gainedHealthEvent);
             EditorGUILayout.PropertyField(lostHealthEvent);
+            EditorGUILayout.PropertyField(maxHealthChangedEvent);
             EditorGUILayout.PropertyField(entityDiedEvent);
             EditorGUILayout.PropertyField(preHealEvent);
             EditorGUILayout.PropertyField(entityHealedEvent);
